@@ -71,7 +71,7 @@ async def play(ctx, url):
             filename = await YTDLSource.from_url(url, loop=bot.loop)
             
             # Play the audio in the connected voice channel
-            source = discord.FFmpegPCMAudio(executable="ffmpeg.exe", source=filename)
+            source = discord.FFmpegPCMAudio(executable="C:\\ffmpeg\\bin\\ffmpeg.exe", source=filename)
             voice_channel.play(source)
             
         await ctx.send('**Now playing:** {}'.format(filename))
@@ -95,7 +95,7 @@ async def join(ctx):
 async def pause(ctx):
     voice_client = ctx.message.guild.voice_client
     if voice_client.is_playing():
-        await ctx.send("test1")
+        await ctx.send("why you pause the music bruh")
         await voice_client.pause()
     else:
         await ctx.send("The bot is not playing anything at the moment.")
@@ -104,6 +104,7 @@ async def pause(ctx):
 async def resume(ctx):
     voice_client = ctx.message.guild.voice_client
     if voice_client.is_paused():
+        await ctx.send("that's more like it")
         await voice_client.resume()
     else:
         await ctx.send("The bot was not playing anything before this. Use play_song command")
@@ -114,6 +115,7 @@ async def resume(ctx):
 async def leave(ctx):
     voice_client = ctx.message.guild.voice_client
     if voice_client.is_connected():
+        await ctx.send("didn't know u weren't chill like that")
         await voice_client.disconnect()
     else:
         await ctx.send("The bot is not connected to a voice channel.")
@@ -122,6 +124,7 @@ async def leave(ctx):
 async def stop(ctx):
     voice_client = ctx.message.guild.voice_client
     if voice_client.is_playing():
+        await ctx.send("why you pause the music bruh")
         await voice_client.stop()
     else:
         await ctx.send("The bot is not playing anything at the moment.")
