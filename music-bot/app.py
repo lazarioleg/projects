@@ -55,18 +55,30 @@ class YTDLSource(discord.PCMVolumeTransformer):
 
 
 @bot.command(name='play_song', help='To play song')
-async def play(ctx,url):
-    
-    try :
-        server = ctx.message.guild
-        voice_channel = server.voice_client
-
+async def play(ctx, url):
+    try:
+        # Check if the user is in a voice channel
+        if not ctx.author.voice:
+            return await ctx.send('You are not connected to a voice channel')
+        
+        # Check if the bot is already connected to a voice channel in the same server
+        voice_channel = ctx.voice_client
+        if not voice_channel:
+            voice_channel = await ctx.author.voice.channel.connect()
+        
         async with ctx.typing():
+            # Download and extract the audio file from the URL
             filename = await YTDLSource.from_url(url, loop=bot.loop)
-            voice_channel.play(discord.FFmpegPCMAudio(executable="ffmpeg.exe", source=filename))
+            
+            # Play the audio in the connected voice channel
+            source = discord.FFmpegPCMAudio(executable="ffmpeg.exe", source=filename)
+            voice_channel.play(source)
+            
         await ctx.send('**Now playing:** {}'.format(filename))
-    except:
-        await ctx.send("The bot is not connected to a voice channel.")
+    except Exception as e:
+        print(e)
+        await ctx.send("Something went wrong while trying to play the song.")
+
 
 
 @bot.command(name='join', help='Tells the bot to join the voice channel')
