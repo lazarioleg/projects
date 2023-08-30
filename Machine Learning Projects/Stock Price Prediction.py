@@ -13,5 +13,7 @@ from sklearn import metrics
 import warnings
 warnings.filterwarnings("ignore")
 
-
+def dataBaseExplanation(String filename):
+    df = pd.read_csv(filename)
+    
 
