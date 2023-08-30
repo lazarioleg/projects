@@ -1,3 +1,4 @@
+import os
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -13,7 +14,19 @@ from sklearn import metrics
 import warnings
 warnings.filterwarnings("ignore")
 
-def dataBaseExplanation(String filename):
+def dataBaseExplanation(filename):
     df = pd.read_csv(filename)
+    df.head()
+    print("CSV:",df.shape, "\n")
+    data_analysis = df.describe()
+    data_analysis.to_csv('output.csv', index=False)
+    os.replace('output.csv', 'MLProjects\data\\data.csv')
+
+
+def main():
+    dataBaseExplanation('MLProjects\data\TSLA.csv')
+
+if __name__ == "__main__":
+    main()
     
 
