@@ -3,6 +3,7 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sb
+import logisticregression
  
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
@@ -27,8 +28,18 @@ def dataBaseExplanation(filename):
 #returns the rows of data
 def returnDataFrame(filename):
     df = pd.read_csv(filename)
+    splitted = df['Date'].str.split('/', expand=True)
+    splitted = df['Date'].str.split('/', expand=True)
+    
+    df['day'] = splitted[1].astype('int')
+    df['month'] = splitted[0].astype('int')
+    df['year'] = splitted[2].astype('int')
+
+    #quarter checking
+    df['is_quarter_end'] = np.where(df['month']%3==0,1,0)
+    
     df.head()
-    return df
+    return df;
 
 def dataAnalysisFDA(df):
     plt.figure(figsize=(15,8))
@@ -37,6 +48,8 @@ def dataAnalysisFDA(df):
     plt.ylabel('Price in $USD')
     plt.xlabel('Days from 2010')
     plt.show()
+
+features = ['Open', 'High', 'Low', 'Close', 'Volume']
 
 def distributionPlotShower(df):
     print(df.head())
@@ -55,7 +68,51 @@ def distributionPlotShower(df):
         sb.distplot(df[col])
     plt.show()
 
+    #left-skewed data fix soon
 
+    plt.subplots(figsize=(20,10))
+    for i, col in enumerate(features):
+        plt.subplot(2,3,i+1)
+        sb.boxplot(df[col])
+    plt.show()
+
+
+def barGraphShower(df):
+    #fix errors in terminal
+    
+    data_grouped = df.groupby('year').mean()
+    plt.subplots(figsize=(20,10))
+    
+    for i, col in enumerate(['Open', 'High', 'Low', 'Close']):
+        plt.subplot(2,2,i+1)
+        data_grouped[col].plot.bar()
+    plt.show()
+
+
+def pieGraphShower(df):
+    plt.pie(df['target'].value_counts().values,
+        labels=[0, 1], autopct='%1.1f%%')
+    plt.show()
+
+
+def heatMapMaker(df):
+    plt.figure(figsize=(10, 10))
+    sb.heatmap(df.corr() > 0.9, annot=True, cbar=False)
+    plt.show()
+    features = df[['open-close', 'low-high', 'is_quarter_end']]
+    target = df['target']
+    
+    scaler = StandardScaler()
+    features = scaler.fit_transform(features)
+    
+    X_train, X_valid, Y_train, Y_valid = train_test_split(
+        features, target, test_size=0.1, random_state=2022)
+    print(X_train.shape, X_valid.shape)
+
+
+def confusionMatrix(df, model, X_valid, Y_valid):
+    metrics.plot_confusion_matrix(model, X_valid, Y_valid)
+    plt.show()
 
 
 
@@ -65,6 +122,7 @@ def main():
     print("\n")
     #dataAnalysisFDA(returnDataFrame(test_data))
     distributionPlotShower(returnDataFrame(test_data))
+    barGraphShower(returnDataFrame(test_data))
 
 
 if __name__ == "__main__":
