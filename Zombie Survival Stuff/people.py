@@ -74,6 +74,7 @@ def print_team_status(teams):
             if person.random_weapon:
                 print(f"Random Weapon: {person.random_weapon}")
         print("\n")
+        encounters(team_id)
 
 
 # Read encounters, items, and names from specified files
@@ -81,13 +82,30 @@ encounters = read_encounters_from_file('encounters.txt')
 items = read_items_from_file('items.txt')
 
 # Specify the number of teams and people per team
-num_teams = 11
-people_per_team = 2
+TEAM_NUMS = 11
+PEOPLE_PER_TEAM = 2
 
 # Generate teams and simulate encounters
-teams = generate_teams(num_teams, people_per_team)
+TEAMS = generate_teams(TEAM_NUMS, PEOPLE_PER_TEAM)
 
 # Print the status of each team
-print_team_status(teams)
+print_team_status(TEAMS)
+
+
+"""
+/////////////////////////
+ENCOUNTER HANDLING LOGIC
+/////////////////////////
+"""
+
+def encounters(team_id):
+    # Read encounters from file
+    encounters = read_encounters_from_file('encounters.txt')
+
+    # Randomly select an encounter
+    encounter = random.choice(encounters)
+
+    # Print the team and encounter
+    print(f"Team {team_id} encounters {encounter}")
 
 
