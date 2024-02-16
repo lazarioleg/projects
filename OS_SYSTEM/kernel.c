@@ -68,7 +68,7 @@ void draw_line(int x1, int y1, int x2, int y2, uint8_t color) {
 		y_dis = y2 - y1;
 	}
 
-	//main line function (Bresenhem's Line Drawing Algorithm)
+	//main line function (Bresenham's Line Drawing Algorithm)
 	int x_step = x1 < x2 ? 1 : -1;
     int y_step = y1 < y2 ? 1 : -1;
     int error = (x_dis > y_dis ? x_dis : -y_dis) / 2;
